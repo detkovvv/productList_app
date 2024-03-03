@@ -12,7 +12,7 @@ export const App: FC = () => {
                 location.reload();
             }}
         >
-            <div>products</div>
+            <div>product list</div>
         </ErrorBoundary>
     );
 };
