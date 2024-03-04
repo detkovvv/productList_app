@@ -1,9 +1,4 @@
 :root {
-  font-family: Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  font-size: 8px;
-  line-height: 1.2;
-
   /*Colors*/
   --white: #fff;
   --black: #272727;
@@ -11,6 +6,12 @@
   --pink: #ff008a;
   --darkpurple: #7b73e1;
   --grey: #f2f2f2;
+  /* Fonts */
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--black);
 }
 
 /* Reset and base styles  */

@@ -3,6 +3,7 @@ import { type FC } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { FallbackComponent } from '../components/FallbackComponent/FallbackComponent';
+import { MainComponent } from '../components/MainComponent/MainComponent';
 
 export const App: FC = () => {
     return (
@@ -12,7 +13,7 @@ export const App: FC = () => {
                 location.reload();
             }}
         >
-            <div>product list</div>
+            <MainComponent />
         </ErrorBoundary>
     );
 };
