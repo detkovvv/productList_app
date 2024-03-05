@@ -55,13 +55,16 @@ export const MainComponent: FC = () => {
         }
     };
 
-    useEffect(() => {
+    useEffect((): void => {
         getProducts();
     }, []);
 
     const lastProductIndex = currentPage * productsPerPage;
     const firstProductIndex = lastProductIndex - productsPerPage;
     const currentProducts = products.slice(firstProductIndex, lastProductIndex);
+    const paginate = (pageNumber: number) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
         <div className={style.main_container}>
@@ -77,7 +80,11 @@ export const MainComponent: FC = () => {
                     <Product key={product.id} product={product} />
                 ))}
             </ul>
-            <Pagination productsPerPage={productsPerPage} totalProducts={products.length} />
+            <Pagination
+                paginate={paginate}
+                productsPerPage={productsPerPage}
+                totalProducts={products.length}
+            />
             {isLoading && <div className={style.loading} />}
         </div>
     );

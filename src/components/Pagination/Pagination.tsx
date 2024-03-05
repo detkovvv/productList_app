@@ -2,7 +2,7 @@ import { type FC } from 'react';
 
 import style from './Pagination.module.css';
 
-export const Pagination: FC = ({ productsPerPage, totalProducts }) => {
+export const Pagination: FC = ({ paginate, productsPerPage, totalProducts }) => {
     const pageNumbers = [];
 
     for (let i = 1; i <= Math.ceil(totalProducts / productsPerPage); i++) {
@@ -14,7 +14,7 @@ export const Pagination: FC = ({ productsPerPage, totalProducts }) => {
             <ul className={style.pagination}>
                 {pageNumbers.map((number) => (
                     <li className={style.page_item} key={number}>
-                        <a className={style.page_link} href='!#'>
+                        <a className={style.page_link} href='!#' onClick={() => paginate(number)}>
                             {number}
                         </a>
                     </li>
