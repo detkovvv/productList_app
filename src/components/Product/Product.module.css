@@ -1,0 +1,23 @@
+.list_item {
+    padding: 2px;
+    display: flex;
+    gap: 5px;
+}
+
+.field {
+    background-color: white;
+    width: 240px;
+    line-height: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.field:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.field:last-child {
+    border-radius: 0 5px 5px 0;
+}

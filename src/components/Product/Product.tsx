@@ -1,11 +1,11 @@
 import { type FC } from 'react';
 
+import style from './Product.module.css';
 import { type ProductType } from '../../services/types';
-import style from '../MainComponent/MainComponent.module.css';
 
 export const Product: FC<{ product: ProductType }> = ({ product }) => {
     return (
-        <li className={style.list_item} key={product.id}>
+        <li className={style.list_item}>
             <div className={style.field}>{product.id}</div>
             <div className={style.field}>{product.product}</div>
             <div className={style.field}>{product.price}</div>

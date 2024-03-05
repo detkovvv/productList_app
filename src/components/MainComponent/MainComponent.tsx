@@ -77,7 +77,7 @@ export const MainComponent: FC = () => {
             </ul>
             <ul className={style.list}>
                 {products.map((product) => (
-                    <Product product={product} />
+                    <Product key={product.id} product={product} />
                 ))}
             </ul>
             <div>
