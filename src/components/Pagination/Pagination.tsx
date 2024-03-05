@@ -2,7 +2,19 @@ import { type FC } from 'react';
 
 import style from './Pagination.module.css';
 
-export const Pagination: FC = ({ currentPage, paginate, productsPerPage, totalProducts }) => {
+type PaginationProps = {
+    currentPage: number;
+    paginate: (arg0: number) => void;
+    productsPerPage: number;
+    totalProducts: number;
+};
+
+export const Pagination: FC<PaginationProps> = ({
+    currentPage,
+    paginate,
+    productsPerPage,
+    totalProducts,
+}) => {
     const pageNumbers = [];
 
     for (let i = 1; i <= Math.ceil(totalProducts / productsPerPage); i++) {

@@ -2,6 +2,7 @@
     padding: 10px 0;
     display: flex;
     gap: 4px;
+    overflow-x: hidden;
 }
 .page_item{
     padding: 2px;
