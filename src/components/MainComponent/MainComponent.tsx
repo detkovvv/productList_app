@@ -2,15 +2,17 @@ import { useState, useEffect, type FC } from 'react';
 
 import style from './MainComponent.module.css';
 import { axiosInstance } from '../../services/axios';
-import { type Item } from '../../services/types';
+import { type ProductType } from '../../services/types';
+import { Product } from '../Product/Product';
 
 export const MainComponent: FC = () => {
-    const [items, setItems] = useState<Item[]>([]);
+    const [products, setProducts] = useState<ProductType[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
+    const [productsPerPage] = useState<number>(10);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const fetchData = async () => {
+    const getProducts = async () => {
         try {
             setIsLoading(true);
 
@@ -18,7 +20,7 @@ export const MainComponent: FC = () => {
                 action: 'get_ids',
                 params: {
                     offset: 1,
-                    limit: 500,
+                    limit: 150,
                 },
             });
 
@@ -27,7 +29,7 @@ export const MainComponent: FC = () => {
             // отбор уникальных id
             const uniqueIds = Array.from(new Set(ids));
 
-            let fetchedItems: Item[] = [];
+            let fetchedItems: ProductType[] = [];
 
             // запрос продуктов порционно по 100 ids
             for (let i = 0; i < uniqueIds.length; i += 100) {
@@ -41,7 +43,7 @@ export const MainComponent: FC = () => {
                 fetchedItems = [...fetchedItems, ...itemsResponse.data.result];
             }
 
-            setItems((prevItems) => [...prevItems, ...fetchedItems]);
+            setProducts((prevItems) => [...prevItems, ...fetchedItems]);
 
             const totalItemsCount = ids.length;
             setTotalPages(Math.ceil(totalItemsCount / 50));
@@ -61,7 +63,7 @@ export const MainComponent: FC = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        getProducts();
     }, [currentPage]);
 
     return (
@@ -74,13 +76,8 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Brand</li>
             </ul>
             <ul className={style.list}>
-                {items.map((item) => (
-                    <li className={style.list_item} key={item.id}>
-                        <div className={style.field}>{item.id}</div>
-                        <div className={style.field}>{item.product}</div>
-                        <div className={style.field}>{item.price}</div>
-                        <div className={style.field}>{item.brand || 'нет бренда'}</div>
-                    </li>
+                {products.map((product) => (
+                    <Product product={product} />
                 ))}
             </ul>
             <div>
