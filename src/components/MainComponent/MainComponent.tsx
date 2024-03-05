@@ -72,12 +72,16 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Price</li>
                 <li className={style.head_item}>Brand</li>
             </ul>
-            <Pagination
-                currentPage={currentPage}
-                paginate={paginate}
-                productsPerPage={productsPerPage}
-                totalProducts={products.length}
-            />
+            <div className={style.navigation}>
+                <Pagination
+                    currentPage={currentPage}
+                    paginate={paginate}
+                    productsPerPage={productsPerPage}
+                    totalProducts={products.length}
+                />
+                <button className={`${style.btn_back & style.btn}`}>{'prev page'}</button>
+                <button className={`${style.btn_forward & style.btn}`}>{'next page'}</button>
+            </div>
             <ul className={style.list}>
                 {currentProducts.map((product) => (
                     <Product key={product.id} product={product} />

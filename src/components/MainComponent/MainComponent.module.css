@@ -37,6 +37,22 @@
     border-radius: 0 5px 5px 0;
 }
 
+.navigation{
+    position: relative;
+    overflow: hidden;
+    width: 60%;
+    display: flex;
+    align-items: center;
+}
+.btn{
+
+}
+.btn_back{
+
+}
+.btn_forward{
+
+}
 .list {
     display: flex;
     flex-direction: column;
