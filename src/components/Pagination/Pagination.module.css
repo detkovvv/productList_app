@@ -13,7 +13,21 @@
     justify-content: center;
     align-items: center;
 }
+.page_item_active{
+    padding: 2px;
+    background-color: var(--purple);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .page_link{
     font-size: 2em;
     color: var(--darkpurple);
+}
+.page_link_active{
+    font-size: 2em;
+    color: var(--white);
 }

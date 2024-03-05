@@ -10,7 +10,6 @@ export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [productsPerPage] = useState<number>(50);
-    const [totalPages, setTotalPages] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const getProducts = async () => {
@@ -45,9 +44,6 @@ export const MainComponent: FC = () => {
             }
 
             setProducts((prevItems) => [...prevItems, ...fetchedItems]);
-
-            const totalItemsCount = ids.length;
-            setTotalPages(Math.ceil(totalItemsCount / 50));
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {
@@ -64,6 +60,7 @@ export const MainComponent: FC = () => {
     const currentProducts = products.slice(firstProductIndex, lastProductIndex);
     const paginate = (pageNumber: number) => {
         setCurrentPage(pageNumber);
+        console.log(products, currentPage, currentProducts);
     };
 
     return (
@@ -75,16 +72,18 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Price</li>
                 <li className={style.head_item}>Brand</li>
             </ul>
+            <Pagination
+                currentPage={currentPage}
+                paginate={paginate}
+                productsPerPage={productsPerPage}
+                totalProducts={products.length}
+            />
             <ul className={style.list}>
                 {currentProducts.map((product) => (
                     <Product key={product.id} product={product} />
                 ))}
             </ul>
-            <Pagination
-                paginate={paginate}
-                productsPerPage={productsPerPage}
-                totalProducts={products.length}
-            />
+
             {isLoading && <div className={style.loading} />}
         </div>
     );
