@@ -3,12 +3,13 @@ import { useState, useEffect, type FC } from 'react';
 import style from './MainComponent.module.css';
 import { axiosInstance } from '../../services/axios';
 import { type ProductType } from '../../services/types';
+import { Pagination } from '../Pagination/Pagination';
 import { Product } from '../Product/Product';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const [productsPerPage] = useState<number>(10);
+    const [productsPerPage] = useState<number>(50);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -54,17 +55,13 @@ export const MainComponent: FC = () => {
         }
     };
 
-    const handlePrevPage = () => {
-        setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-    };
-
-    const handleNextPage = () => {
-        setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
-    };
-
     useEffect(() => {
         getProducts();
-    }, [currentPage]);
+    }, []);
+
+    const lastProductIndex = currentPage * productsPerPage;
+    const firstProductIndex = lastProductIndex - productsPerPage;
+    const currentProducts = products.slice(firstProductIndex, lastProductIndex);
 
     return (
         <div className={style.main_container}>
@@ -76,19 +73,11 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Brand</li>
             </ul>
             <ul className={style.list}>
-                {products.map((product) => (
+                {currentProducts.map((product) => (
                     <Product key={product.id} product={product} />
                 ))}
             </ul>
-            <div>
-                <button disabled={currentPage === 1} onClick={handlePrevPage}>
-                    Previous
-                </button>
-                <span>{`Page ${currentPage} of ${totalPages}`}</span>
-                <button disabled={currentPage === totalPages} onClick={handleNextPage}>
-                    Next
-                </button>
-            </div>
+            <Pagination productsPerPage={productsPerPage} totalProducts={products.length} />
             {isLoading && <div className={style.loading} />}
         </div>
     );

@@ -1,0 +1,19 @@
+.pagination{
+    padding: 10px 0;
+    display: flex;
+    gap: 4px;
+}
+.page_item{
+    padding: 2px;
+    background-color: var(--white);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.page_link{
+    font-size: 2em;
+    color: var(--darkpurple);
+}
