@@ -1,9 +1,7 @@
-import axios from 'axios';
-import md5 from 'md5';
 import { useState, useEffect, type FC } from 'react';
 
 import style from './MainComponent.module.css';
-import { API_BASE_URL } from '../../services/axios';
+import { axiosInstance } from '../../services/axios';
 import { type Item } from '../../services/types';
 
 export const MainComponent: FC = () => {
@@ -16,23 +14,13 @@ export const MainComponent: FC = () => {
         try {
             setIsLoading(true);
 
-            const authString = generateAuthString();
-            const idsResponse = await axios.post(
-                API_BASE_URL,
-                {
-                    action: 'get_ids',
-                    params: {
-                        offset: 1,
-                        limit: 500,
-                    },
+            const idsResponse = await axiosInstance.post('/', {
+                action: 'get_ids',
+                params: {
+                    offset: 1,
+                    limit: 500,
                 },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Auth': authString,
-                    },
-                },
-            );
+            });
 
             const ids = idsResponse.data.result;
 
@@ -43,21 +31,12 @@ export const MainComponent: FC = () => {
 
             // запрос продуктов порционно по 100 ids
             for (let i = 0; i < uniqueIds.length; i += 100) {
-                const itemsResponse = await axios.post(
-                    API_BASE_URL,
-                    {
-                        action: 'get_items',
-                        params: {
-                            ids: uniqueIds.slice(i, i + 100),
-                        },
+                const itemsResponse = await axiosInstance.post('/', {
+                    action: 'get_items',
+                    params: {
+                        ids: uniqueIds.slice(i, i + 100),
                     },
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-Auth': authString,
-                        },
-                    },
-                );
+                });
 
                 fetchedItems = [...fetchedItems, ...itemsResponse.data.result];
             }
@@ -71,12 +50,6 @@ export const MainComponent: FC = () => {
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const generateAuthString = (): string => {
-        const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
-        const password = 'Valantis';
-        return md5(`${password}_${timestamp}`);
     };
 
     const handlePrevPage = () => {
