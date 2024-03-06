@@ -1,3 +1,5 @@
+import usePagination from '@lucasmogari/react-pagination';
+import { type Page, type PageItemProps } from '@lucasmogari/react-pagination/dist/src/types';
 import { type AxiosError } from 'axios';
 import { useState, useEffect, type FC } from 'react';
 
@@ -8,20 +10,37 @@ import { type ProductType } from '../../services/types';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
-    const [currentPage, setCurrentPage] = useState<number>(1);
+    // const [currentPage, setCurrentPage] = useState<number>(1);
     const [productsPerPage] = useState<number>(50);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const { currentPage, getPageItem, size } = usePagination({
+        totalItems: 500,
+        page: 1,
+        itemsPerPage: 50,
+        maxPageItems: 7,
+        numbers: true,
+        arrows: true,
+        getPageItemProps: (pageItemIndex: number, page: Page, props: PageItemProps) => {
+            const defaultOnClick = props.onClick;
+            // Overwriting onClick
+            props.onClick = (e) => {
+                defaultOnClick(e);
+                getProductsList(page);
+            };
+        },
+    });
 
-    const getProducts = async (signal: AbortSignal) => {
+    const getProductsList = async (signal: AbortSignal, page: number) => {
         try {
             setIsLoading(true);
+            const offset = (page - 1) * 50;
             const idsResponse = await axiosInstance.post(
                 '/',
                 {
                     action: 'get_ids',
                     params: {
-                        offset: 0,
-                        limit: 50,
+                        offset: offset,
+                        limit: productsPerPage,
                     },
                 },
                 { signal },
@@ -59,20 +78,12 @@ export const MainComponent: FC = () => {
     useEffect(() => {
         const abortController = new AbortController();
 
-        getProducts(abortController.signal);
+        getProductsList(abortController.signal, currentPage);
 
         return () => {
             abortController.abort();
         };
-    }, []);
-
-    // const lastProductIndex = currentPage * productsPerPage;
-    // const firstProductIndex = lastProductIndex - productsPerPage;
-    // const currentProducts = products.slice(firstProductIndex, lastProductIndex);
-    // const paginate = (pageNumber: number) => {
-    //     setCurrentPage(pageNumber);
-    //     console.log(products, currentPage, currentProducts);
-    // };
+    }, [currentPage]);
 
     return (
         <div className={style.main_container}>
@@ -83,16 +94,26 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Price</li>
                 <li className={style.head_item}>Brand</li>
             </ul>
-            <div className={style.navigation}>
-                {/* <Pagination */}
-                {/*     currentPage={currentPage} */}
-                {/*     paginate={paginate} */}
-                {/*     productsPerPage={productsPerPage} */}
-                {/*     totalProducts={products.length} */}
-                {/* /> */}
-                {/* <button className={`${style.btn_back & style.btn}`}>{'prev page'}</button> */}
-                {/* <button className={`${style.btn_forward & style.btn}`}>{'next page'}</button> */}
-            </div>
+            <nav>
+                <ul style={{ display: 'flex', listStyle: 'none' }}>
+                    {[...Array(size)].map((_, i) => {
+                        const { page, props } = getPageItem(i);
+                        return (
+                            <li key={i}>
+                                <button
+                                    {...props}
+                                    style={{
+                                        margin: '.5rem',
+                                        fontWeight: page === currentPage ? 'bold' : null,
+                                    }}
+                                >
+                                    {page}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </nav>
             <ul className={style.list}>
                 {products.map((product) => (
                     <Product key={product.id} product={product} />
