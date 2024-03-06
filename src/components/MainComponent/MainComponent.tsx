@@ -1,10 +1,10 @@
 import { useState, useEffect, type FC } from 'react';
 
 import style from './MainComponent.module.css';
+import { Product } from './Product/Product';
 import { axiosInstance } from '../../services/axios';
 import { type ProductType } from '../../services/types';
 import { Pagination } from '../Pagination/Pagination';
-import { Product } from '../Product/Product';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -22,7 +22,7 @@ export const MainComponent: FC = () => {
                     action: 'get_ids',
                     params: {
                         offset: 1,
-                        limit: 2,
+                        limit: 50,
                     },
                 },
                 { signal },

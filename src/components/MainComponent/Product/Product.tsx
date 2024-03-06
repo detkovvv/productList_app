@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 
 import style from './Product.module.css';
-import { type ProductType } from '../../services/types';
+import { type ProductType } from '../../../services/types';
 
 export const Product: FC<{ product: ProductType }> = ({ product }) => {
     return (
