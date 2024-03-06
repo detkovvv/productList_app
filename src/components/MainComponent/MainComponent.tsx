@@ -19,8 +19,8 @@ export const MainComponent: FC = () => {
             const idsResponse = await axiosInstance.post('/', {
                 action: 'get_ids',
                 params: {
-                    offset: 1,
-                    limit: 150,
+                    offset: 2,
+                    limit: 5,
                 },
             });
 

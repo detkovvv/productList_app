@@ -44,13 +44,17 @@
     display: flex;
     align-items: center;
 }
-.btn{
 
+.btn{
+    position: absolute;
+    padding: 2px 4px;
+    background-color: var(--white);
+    color: var(--darkpurple);
 }
 .btn_back{
 
 }
-.btn_forward{
+.btn_forward {
 
 }
 .list {
