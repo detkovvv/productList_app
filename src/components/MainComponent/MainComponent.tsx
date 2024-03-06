@@ -12,17 +12,21 @@ export const MainComponent: FC = () => {
     const [productsPerPage] = useState<number>(50);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const getProducts = async () => {
+    const getProducts = async (signal) => {
         try {
             setIsLoading(true);
 
-            const idsResponse = await axiosInstance.post('/', {
-                action: 'get_ids',
-                params: {
-                    offset: 2,
-                    limit: 5,
+            const idsResponse = await axiosInstance.post(
+                '/',
+                {
+                    action: 'get_ids',
+                    params: {
+                        offset: 1,
+                        limit: 2,
+                    },
                 },
-            });
+                { signal },
+            );
 
             const ids = idsResponse.data.result;
 
@@ -45,14 +49,24 @@ export const MainComponent: FC = () => {
 
             setProducts((prevItems) => [...prevItems, ...fetchedItems]);
         } catch (error) {
-            console.error('Error fetching data:', error);
+            if (error.name === 'AbortError') {
+                console.log('Request aborted', error.message);
+            } else {
+                console.error('Error fetching data:', error);
+            }
         } finally {
             setIsLoading(false);
         }
     };
 
-    useEffect((): void => {
-        getProducts();
+    useEffect(() => {
+        const abortController = new AbortController();
+
+        getProducts(abortController.signal);
+
+        return () => {
+            abortController.abort();
+        };
     }, []);
 
     const lastProductIndex = currentPage * productsPerPage;
