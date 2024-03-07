@@ -1,6 +1,7 @@
 import { type AxiosError } from 'axios';
 import { useState, useEffect, type FC } from 'react';
 
+import { Filter } from './Filter/Filter';
 import style from './MainComponent.module.css';
 import { Product } from './Product/Product';
 import { axiosInstance } from '../../services/axios';
@@ -153,7 +154,7 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Brand</li>
             </ul>
             <nav className={style.navigation}>
-                <ul className={style.navigation_items}>
+                <div className={style.navigation_items}>
                     <button
                         className={`${style.btn} ${style.btn_prev}`}
                         disabled={isFirstPage}
@@ -168,49 +169,24 @@ export const MainComponent: FC = () => {
                     >
                         next
                     </button>
-                    <div>
-                        <label>
-                            Brand:
-                            <select onChange={handleBrandChange} value={selectedBrand}>
-                                <option value=''>All</option>
-                                {brands.map((brand, index) => (
-                                    <option key={index} value={brand}>
-                                        {brand}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <label>
-                            Price:
-                            <select onChange={handlePriceChange} value={selectedPrice}>
-                                <option value=''>All</option>
-                                {prices.map((price, index) => (
-                                    <option key={index} value={price}>
-                                        {price}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                        <label>
-                            Name:
-                            <select onChange={handleNameChange} value={selectedName}>
-                                <option value=''>All</option>
-                                {names.map((name, index) => (
-                                    <option key={index} value={name}>
-                                        {name}
-                                    </option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
-                </ul>
+                    <Filter
+                        brands={brands}
+                        handleBrandChange={handleBrandChange()}
+                        handleNameChange={handleNameChange}
+                        handlePriceChange={handlePriceChange()}
+                        names={names}
+                        prices={prices}
+                        selectedBrand={[selectedBrand]}
+                        selectedName={selectedName}
+                        selectedPrice={selectedPrice}
+                    />
+                </div>
             </nav>
             <ul className={style.list}>
                 {products.map((product) => (
                     <Product key={product.id} product={product} />
                 ))}
             </ul>
-
             {isLoading && <div className={style.loading} />}
         </div>
     );
