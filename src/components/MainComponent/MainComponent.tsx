@@ -132,6 +132,24 @@ export const MainComponent: FC = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1);
     };
 
+    const [selectedBrand, setSelectedBrand] = useState('');
+    const [selectedPrice, setSelectedPrice] = useState('');
+    const [selectedName, setSelectedName] = useState('');
+
+    const handleBrandChange = (event) => {
+        setSelectedBrand(event.target.value);
+        // getFilteredProducts();
+    };
+
+    const handlePriceChange = (event) => {
+        setSelectedPrice(event.target.value);
+        // getFilteredProducts();
+    };
+
+    const handleNameChange = (event) => {
+        setSelectedName(event.target.value);
+        // getFilteredProducts();
+    };
     return (
         <div className={style.main_container}>
             <h1 className={style.main_title}>Product List</h1>
@@ -157,6 +175,41 @@ export const MainComponent: FC = () => {
                     >
                         next
                     </button>
+                    <div>
+                        <label>
+                            Brand:
+                            <select onChange={handleBrandChange} value={selectedBrand}>
+                                <option value=''>All</option>
+                                {brands.map((brand, index) => (
+                                    <option key={index} value={brand}>
+                                        {brand}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>
+                            Price:
+                            <select onChange={handlePriceChange} value={selectedPrice}>
+                                <option value=''>All</option>
+                                {prices.map((price, index) => (
+                                    <option key={index} value={price}>
+                                        {price}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                        <label>
+                            Name:
+                            <select onChange={handleNameChange} value={selectedName}>
+                                <option value=''>All</option>
+                                {names.map((name, index) => (
+                                    <option key={index} value={name}>
+                                        {name}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
                 </ul>
             </nav>
             <ul className={style.list}>
