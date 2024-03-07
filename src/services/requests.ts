@@ -1,6 +1,6 @@
 import { axiosInstance } from './axios';
 
-export const response = (action, params, signal) =>
+export const fetching = (action, params, signal) =>
     axiosInstance.post(
         '/',
         {

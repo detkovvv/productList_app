@@ -4,7 +4,7 @@ import { useState, useEffect, type FC } from 'react';
 import { Filter } from './Filter/Filter';
 import style from './MainComponent.module.css';
 import { Product } from './Product/Product';
-import { response } from '../../services/requests';
+import { fetching } from '../../services/requests';
 import { type ProductType } from '../../services/types';
 
 export const MainComponent: FC = () => {
@@ -23,14 +23,14 @@ export const MainComponent: FC = () => {
         try {
             setIsLoading(true);
             const offset = (page - 1) * productsPerPage;
-            const idsResponse = await response(
+            const idsResponse = await fetching(
                 'get_ids',
                 { offset: offset, limit: productsPerPage },
                 signal,
             );
             const ids = idsResponse.data.result;
             // запрос продуктов
-            const itemsResponse = await response(
+            const itemsResponse = await fetching(
                 'get_items',
                 {
                     ids: ids,
@@ -68,7 +68,7 @@ export const MainComponent: FC = () => {
             const offset = (page - 1) * productsPerPage;
             const fieldsData = await Promise.all(
                 fieldNames.map(async (field) => {
-                    const fieldResponse = await response(
+                    const fieldResponse = await fetching(
                         'get_fields',
                         {
                             field: field,
