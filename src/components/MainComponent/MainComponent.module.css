@@ -38,25 +38,35 @@
 }
 
 .navigation{
-    position: relative;
-    overflow: hidden;
-    width: 60%;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    padding: 10px;
 }
-
+.navigation_items{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .btn{
-    position: absolute;
-    padding: 2px 4px;
-    background-color: var(--white);
-    color: var(--darkpurple);
+    padding: 5px 10px;
+    background-color: var(--purple);
+    color: var(--white);
+    border-radius: 5px;
+    border: 1px solid var(--white);
+    text-align: center;
+    font-weight: 700;
 }
-.btn_back{
-
+.btn:hover{
+    background-color: var(--darkpurple);
 }
-.btn_forward {
-
+.btn_prev:disabled,
+.btn_next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
+.btn_prev{}
+.btn_next{}
 .list {
     display: flex;
     flex-direction: column;

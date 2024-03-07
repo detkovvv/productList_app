@@ -411,11 +411,6 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@lucasmogari/react-pagination@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@lucasmogari/react-pagination/-/react-pagination-1.2.0.tgz#9dd1fceb6152597f983e90725f18f65a087549c6"
-  integrity sha512-B+67nVJhzk8ACn81ISjha8+B58dfOdFLYjEYtmVWLuEaWYbD0ogyPttbG2VwlGFFDU23Rjc3fDlT4QY+g6sNYA==
-
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
   resolved "https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"

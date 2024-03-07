@@ -1,5 +1,3 @@
-import usePagination from '@lucasmogari/react-pagination';
-import { type Page, type PageItemProps } from '@lucasmogari/react-pagination/dist/src/types';
 import { type AxiosError } from 'axios';
 import { useState, useEffect, type FC } from 'react';
 
@@ -10,30 +8,16 @@ import { type ProductType } from '../../services/types';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
-    // const [currentPage, setCurrentPage] = useState<number>(1);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const [productsPerPage] = useState<number>(50);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { currentPage, getPageItem, size } = usePagination({
-        totalItems: 500,
-        page: 1,
-        itemsPerPage: 50,
-        maxPageItems: 7,
-        numbers: true,
-        arrows: true,
-        getPageItemProps: (pageItemIndex: number, page: Page, props: PageItemProps) => {
-            const defaultOnClick = props.onClick;
-            // Overwriting onClick
-            props.onClick = (e) => {
-                defaultOnClick(e);
-                getProductsList(page);
-            };
-        },
-    });
+    const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
+    const [isLastPage, setIsLastPage] = useState<boolean>(false);
 
     const getProductsList = async (signal: AbortSignal, page: number) => {
         try {
             setIsLoading(true);
-            const offset = (page - 1) * 50;
+            const offset = (page - 1) * productsPerPage;
             const idsResponse = await axiosInstance.post(
                 '/',
                 {
@@ -63,6 +47,8 @@ export const MainComponent: FC = () => {
                 }
             });
             setProducts(filteredResponse);
+            setIsFirstPage(page === 1);
+            setIsLastPage(filteredResponse.length < productsPerPage - 5);
         } catch (axiosError) {
             const error = axiosError as AxiosError;
             if (error.name === 'AbortError') {
@@ -85,6 +71,13 @@ export const MainComponent: FC = () => {
         };
     }, [currentPage]);
 
+    const handleNextClick = () => {
+        if (!isLastPage) setCurrentPage(currentPage + 1);
+    };
+    const handlePrevClick = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
+
     return (
         <div className={style.main_container}>
             <h1 className={style.main_title}>Product List</h1>
@@ -94,24 +87,22 @@ export const MainComponent: FC = () => {
                 <li className={style.head_item}>Price</li>
                 <li className={style.head_item}>Brand</li>
             </ul>
-            <nav>
-                <ul style={{ display: 'flex', listStyle: 'none' }}>
-                    {[...Array(size)].map((_, i) => {
-                        const { page, props } = getPageItem(i);
-                        return (
-                            <li key={i}>
-                                <button
-                                    {...props}
-                                    style={{
-                                        margin: '.5rem',
-                                        fontWeight: page === currentPage ? 'bold' : null,
-                                    }}
-                                >
-                                    {page}
-                                </button>
-                            </li>
-                        );
-                    })}
+            <nav className={style.navigation}>
+                <ul className={style.navigation_items}>
+                    <button
+                        className={`${style.btn} ${style.btn_prev}`}
+                        disabled={isFirstPage}
+                        onClick={handlePrevClick}
+                    >
+                        prev
+                    </button>
+                    <button
+                        className={`${style.btn} ${style.btn_next}`}
+                        disabled={isLastPage}
+                        onClick={handleNextClick}
+                    >
+                        next
+                    </button>
                 </ul>
             </nav>
             <ul className={style.list}>
