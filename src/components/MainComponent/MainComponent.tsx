@@ -13,8 +13,12 @@ export const MainComponent: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
+    const [currentIds, setCurrentIds] = useState<string[]>([]);
+    const [brands, setBrands] = useState<string[]>([]);
+    const [prices, setPrices] = useState<number[]>([]);
+    const [names, setNames] = useState<string[]>([]);
 
-    const getProductsList = async (signal: AbortSignal, page: number) => {
+    const getProducts = async (signal: AbortSignal, page: number) => {
         try {
             setIsLoading(true);
             const offset = (page - 1) * productsPerPage;
@@ -31,12 +35,16 @@ export const MainComponent: FC = () => {
             );
             const ids = idsResponse.data.result;
             // запрос продуктов
-            const itemsResponse = await axiosInstance.post('/', {
-                action: 'get_items',
-                params: {
-                    ids: ids,
+            const itemsResponse = await axiosInstance.post(
+                '/',
+                {
+                    action: 'get_items',
+                    params: {
+                        ids: ids,
+                    },
                 },
-            });
+                { signal },
+            );
             // отбор уникальных продуктов
             const uniqIds = new Set();
             const filteredResponse = itemsResponse.data.result.filter((item: ProductType) => {
@@ -47,8 +55,53 @@ export const MainComponent: FC = () => {
                 }
             });
             setProducts(filteredResponse);
+            setCurrentIds(Array.from(uniqIds));
             setIsFirstPage(page === 1);
             setIsLastPage(filteredResponse.length < productsPerPage - 5);
+        } catch (axiosError) {
+            const error = axiosError as AxiosError;
+            if (error.name === 'AbortError') {
+                console.log('Request aborted', error.message);
+            } else {
+                console.error('Error fetching data:', error);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    const getFields = async (signal: AbortSignal, page: number) => {
+        setIsLoading(true);
+        try {
+            const fieldNames = ['brand', 'price', 'product'];
+            const offset = (page - 1) * productsPerPage;
+            const fieldsData = await Promise.all(
+                fieldNames.map(async (field) => {
+                    const fieldResponse = await axiosInstance.post(
+                        '/',
+                        {
+                            action: 'get_fields',
+                            params: {
+                                field: field,
+                                offset: offset,
+                                limit: productsPerPage,
+                            },
+                        },
+                        { signal },
+                    );
+                    return fieldResponse.data.result;
+                }),
+            );
+            const [brandsData, pricesData, namesData] = fieldsData;
+
+            const filteredBrands = brandsData.filter((item) => item !== null);
+            const filteredPrices = pricesData.filter((item) => item !== null);
+            const filteredNames = namesData.filter((item) => item !== null);
+            console.log(filteredBrands);
+            console.log(filteredPrices);
+            console.log(filteredNames);
+            setBrands(filteredBrands);
+            setPrices(filteredPrices);
+            setNames(filteredNames);
         } catch (axiosError) {
             const error = axiosError as AxiosError;
             if (error.name === 'AbortError') {
@@ -64,7 +117,8 @@ export const MainComponent: FC = () => {
     useEffect(() => {
         const abortController = new AbortController();
 
-        getProductsList(abortController.signal, currentPage);
+        getProducts(abortController.signal, currentPage);
+        getFields(abortController.signal, currentPage);
 
         return () => {
             abortController.abort();
