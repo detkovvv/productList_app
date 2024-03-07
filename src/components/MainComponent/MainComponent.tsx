@@ -92,16 +92,9 @@ export const MainComponent: FC = () => {
                 }),
             );
             const [brandsData, pricesData, namesData] = fieldsData;
-
-            const filteredBrands = brandsData.filter((item) => item !== null);
-            const filteredPrices = pricesData.filter((item) => item !== null);
-            const filteredNames = namesData.filter((item) => item !== null);
-            console.log(filteredBrands);
-            console.log(filteredPrices);
-            console.log(filteredNames);
-            setBrands(filteredBrands);
-            setPrices(filteredPrices);
-            setNames(filteredNames);
+            setBrands(brandsData.filter((item) => item !== null));
+            setPrices(pricesData.filter((item) => item !== null));
+            setNames(namesData.filter((item) => item !== null));
         } catch (axiosError) {
             const error = axiosError as AxiosError;
             if (error.name === 'AbortError') {
