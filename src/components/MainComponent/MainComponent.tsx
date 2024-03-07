@@ -4,7 +4,7 @@ import { useState, useEffect, type FC } from 'react';
 import { Filter } from './Filter/Filter';
 import style from './MainComponent.module.css';
 import { Product } from './Product/Product';
-import { axiosInstance } from '../../services/axios';
+import { response } from '../../services/requests';
 import { type ProductType } from '../../services/types';
 
 export const MainComponent: FC = () => {
@@ -23,28 +23,19 @@ export const MainComponent: FC = () => {
         try {
             setIsLoading(true);
             const offset = (page - 1) * productsPerPage;
-            const idsResponse = await axiosInstance.post(
-                '/',
-                {
-                    action: 'get_ids',
-                    params: {
-                        offset: offset,
-                        limit: productsPerPage,
-                    },
-                },
-                { signal },
+            const idsResponse = await response(
+                'get_ids',
+                { offset: offset, limit: productsPerPage },
+                signal,
             );
             const ids = idsResponse.data.result;
             // запрос продуктов
-            const itemsResponse = await axiosInstance.post(
-                '/',
+            const itemsResponse = await response(
+                'get_items',
                 {
-                    action: 'get_items',
-                    params: {
-                        ids: ids,
-                    },
+                    ids: ids,
                 },
-                { signal },
+                signal,
             );
             // отбор уникальных продуктов
             const uniqIds = new Set();
@@ -77,17 +68,14 @@ export const MainComponent: FC = () => {
             const offset = (page - 1) * productsPerPage;
             const fieldsData = await Promise.all(
                 fieldNames.map(async (field) => {
-                    const fieldResponse = await axiosInstance.post(
-                        '/',
+                    const fieldResponse = await response(
+                        'get_fields',
                         {
-                            action: 'get_fields',
-                            params: {
-                                field: field,
-                                offset: offset,
-                                limit: productsPerPage,
-                            },
+                            field: field,
+                            offset: offset,
+                            limit: productsPerPage,
                         },
-                        { signal },
+                        signal,
                     );
                     return fieldResponse.data.result;
                 }),
