@@ -3,15 +3,15 @@ import { type FC } from 'react';
 import style from './Filter.module.css';
 
 type FilterPropsType = {
-    brands;
-    prices;
-    names;
-    handleBrandChange;
-    selectedBrand;
-    handlePriceChange;
-    selectedPrice;
-    handleNameChange;
-    selectedName;
+    brands: string[];
+    prices: number[];
+    names: string[];
+    handleBrandChange: () => void;
+    selectedBrand: string;
+    handlePriceChange: () => void;
+    selectedPrice: string;
+    handleNameChange: () => void;
+    selectedName: string;
 };
 export const Filter: FC<FilterPropsType> = ({
     brands,

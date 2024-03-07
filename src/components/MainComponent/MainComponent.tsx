@@ -171,12 +171,12 @@ export const MainComponent: FC = () => {
                     </button>
                     <Filter
                         brands={brands}
-                        handleBrandChange={handleBrandChange()}
+                        handleBrandChange={handleBrandChange}
                         handleNameChange={handleNameChange}
-                        handlePriceChange={handlePriceChange()}
+                        handlePriceChange={handlePriceChange}
                         names={names}
                         prices={prices}
-                        selectedBrand={[selectedBrand]}
+                        selectedBrand={selectedBrand}
                         selectedName={selectedName}
                         selectedPrice={selectedPrice}
                     />
