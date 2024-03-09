@@ -22,10 +22,10 @@ export const Filters: FC<FiltersPropsType> = ({
     setIsLoading,
     setProducts,
 }) => {
-    const [selectedFilter, setSelectedFilter] = useState<string>('');
+    const [selectedFilter, setSelectedFilter] = useState<object | ''>('');
 
-    const getFilteredProducts = async (signal: AbortSignal, params: string) => {
-        // setIsLoading(true);
+    const getFilteredProducts = async (signal: AbortSignal, params: object) => {
+        setIsLoading(true);
         try {
             const idsResponse = await fetching('filter', params, signal);
             const ids = idsResponse.data.result;
@@ -53,14 +53,13 @@ export const Filters: FC<FiltersPropsType> = ({
             } else {
                 console.error('Error fetching data:', error);
             }
-        } /* finally {
+        } finally {
             setIsLoading(false);
-        }*/
+        }
     };
-    const handleFilterChange = (event) => {
+    const handleFilterChange = (event, key) => {
         const newFilter = event.target.value;
-        setSelectedFilter(newFilter);
-        // Выполнение запроса с новым фильтром
+        setSelectedFilter({ [key]: newFilter });
     };
     useEffect(() => {
         const abortController = new AbortController();
@@ -68,13 +67,16 @@ export const Filters: FC<FiltersPropsType> = ({
         return () => {
             abortController.abort();
         };
-    }, [input]);
+    }, [selectedFilter]);
 
     return (
         <div className={style.filter_container}>
             <label>
                 Brand:
-                <select value={selectedFilter}>
+                <select
+                    onChange={(event) => handleFilterChange(event, 'brand')}
+                    value={selectedFilter}
+                >
                     <option value=''>-</option>
                     {brands.map((brand, index) => (
                         <option key={index} value={brand}>
@@ -85,7 +87,10 @@ export const Filters: FC<FiltersPropsType> = ({
             </label>
             <label>
                 Price:
-                <select onChange={handleFilterChange} value={selectedFilter}>
+                <select
+                    onChange={(event) => handleFilterChange(event, 'price')}
+                    value={selectedFilter}
+                >
                     <option value=''>-</option>
                     {prices.map((price, index) => (
                         <option key={index} value={price}>
@@ -96,7 +101,10 @@ export const Filters: FC<FiltersPropsType> = ({
             </label>
             <label>
                 Name:
-                <select onChange={handleFilterChange} value={selectedFilter}>
+                <select
+                    onChange={(event) => handleFilterChange(event, 'product')}
+                    value={selectedFilter}
+                >
                     <option value=''>-</option>
                     {names.map((name, index) => (
                         <option key={index} value={name}>
