@@ -1,18 +1,15 @@
 import { type AxiosError } from 'axios';
 import { type FC, useEffect, useState } from 'react';
-import { Simulate } from 'react-dom/test-utils';
 
 import style from './Filter.module.css';
 import { fetching } from '../../../services/requests';
 import { type ProductType } from '../../../services/types';
 
-import input = Simulate.input;
-
 type FiltersPropsType = {
     brands: string[];
     prices: number[];
     names: string[];
-    setIsLoading: boolean;
+    setIsLoading: (value: boolean) => boolean;
     setProducts: (value: ((prevState: boolean) => boolean) | boolean) => void;
 };
 export const Filters: FC<FiltersPropsType> = ({
