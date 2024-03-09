@@ -1,7 +1,7 @@
 import { type AxiosError } from 'axios';
 import { useState, useEffect, type FC } from 'react';
 
-import { Filter } from './Filter/Filter';
+import { Filters } from './Filter/Filters';
 import style from './MainComponent.module.css';
 import { Product } from './Product/Product';
 import { fetching } from '../../services/requests';
@@ -20,9 +20,9 @@ export const MainComponent: FC = () => {
     const [names, setNames] = useState<string[]>([]);
 
     const getProducts = async (signal: AbortSignal, page: number) => {
+        setIsLoading(true);
+        const offset = (page - 1) * productsPerPage;
         try {
-            setIsLoading(true);
-            const offset = (page - 1) * productsPerPage;
             const idsResponse = await fetching(
                 'get_ids',
                 { offset: offset, limit: productsPerPage },
@@ -63,9 +63,10 @@ export const MainComponent: FC = () => {
     };
     const getFields = async (signal: AbortSignal, page: number) => {
         setIsLoading(true);
+        const offset = (page - 1) * productsPerPage;
         try {
             const fieldNames = ['brand', 'price', 'product'];
-            const offset = (page - 1) * productsPerPage;
+
             const fieldsData = await Promise.all(
                 fieldNames.map(async (field) => {
                     const fieldResponse = await fetching(
@@ -114,24 +115,10 @@ export const MainComponent: FC = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1);
     };
 
-    const [selectedBrand, setSelectedBrand] = useState('');
-    const [selectedPrice, setSelectedPrice] = useState('');
-    const [selectedName, setSelectedName] = useState('');
-
-    const handleBrandChange = (event) => {
-        setSelectedBrand(event.target.value);
-        // getFilteredProducts();
+    const handleFilterChange = (event, setFilter) => {
+        setFilter(event.target.value);
     };
 
-    const handlePriceChange = (event) => {
-        setSelectedPrice(event.target.value);
-        // getFilteredProducts();
-    };
-
-    const handleNameChange = (event) => {
-        setSelectedName(event.target.value);
-        // getFilteredProducts();
-    };
     return (
         <div className={style.main_container}>
             <h1 className={style.main_title}>Product List</h1>
@@ -157,16 +144,12 @@ export const MainComponent: FC = () => {
                     >
                         next
                     </button>
-                    <Filter
+                    <Filters
                         brands={brands}
-                        handleBrandChange={handleBrandChange}
-                        handleNameChange={handleNameChange}
-                        handlePriceChange={handlePriceChange}
                         names={names}
                         prices={prices}
-                        selectedBrand={selectedBrand}
-                        selectedName={selectedName}
-                        selectedPrice={selectedPrice}
+                        setIsLoading={setIsLoading}
+                        setProducts={setProducts}
                     />
                 </div>
             </nav>
