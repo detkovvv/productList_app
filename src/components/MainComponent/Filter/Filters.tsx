@@ -72,15 +72,15 @@ export const Filters: FC<FiltersPropsType> = ({
     return (
         <div className={style.filter_container}>
             <label>
-                Brand:
+                Name:
                 <select
-                    onChange={(event) => handleFilterChange(event, 'brand')}
+                    onChange={(event) => handleFilterChange(event, 'product')}
                     value={selectedFilter}
                 >
                     <option value=''>-</option>
-                    {brands.map((brand, index) => (
-                        <option key={index} value={brand}>
-                            {brand}
+                    {names.map((name, index) => (
+                        <option key={index} value={name}>
+                            {name}
                         </option>
                     ))}
                 </select>
@@ -100,15 +100,15 @@ export const Filters: FC<FiltersPropsType> = ({
                 </select>
             </label>
             <label>
-                Name:
+                Brand:
                 <select
-                    onChange={(event) => handleFilterChange(event, 'product')}
+                    onChange={(event) => handleFilterChange(event, 'brand')}
                     value={selectedFilter}
                 >
                     <option value=''>-</option>
-                    {names.map((name, index) => (
-                        <option key={index} value={name}>
-                            {name}
+                    {brands.map((brand, index) => (
+                        <option key={index} value={brand}>
+                            {brand}
                         </option>
                     ))}
                 </select>
