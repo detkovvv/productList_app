@@ -1,5 +1,12 @@
 import { type AxiosError } from 'axios';
-import { type FC, useEffect, useState } from 'react';
+import {
+    type ChangeEvent,
+    type Dispatch,
+    type FC,
+    type SetStateAction,
+    useEffect,
+    useState,
+} from 'react';
 
 import style from './Filter.module.css';
 import { fetching } from '../../../services/requests';
@@ -9,8 +16,11 @@ type FiltersPropsType = {
     brands: string[];
     prices: number[];
     names: string[];
-    setIsLoading: (value: boolean) => boolean;
-    setProducts: (value: ((prevState: boolean) => boolean) | boolean) => void;
+    setIsLoading: Dispatch<SetStateAction<boolean>>;
+    setProducts: Dispatch<SetStateAction<ProductType[]>>;
+};
+type SelectedFilterType = {
+    [key: string]: string | number | undefined;
 };
 export const Filters: FC<FiltersPropsType> = ({
     brands,
@@ -19,7 +29,7 @@ export const Filters: FC<FiltersPropsType> = ({
     setIsLoading,
     setProducts,
 }) => {
-    const [selectedFilter, setSelectedFilter] = useState<object | string>();
+    const [selectedFilter, setSelectedFilter] = useState<SelectedFilterType>({});
 
     const getFilteredProducts = async (signal: AbortSignal, params: object) => {
         setIsLoading(true);
@@ -33,7 +43,7 @@ export const Filters: FC<FiltersPropsType> = ({
                 },
                 signal,
             );
-            // отбор уникальных продуктов
+
             const uniqIds = new Set();
             const filteredResponse = itemsResponse.data.result.filter((item: ProductType) => {
                 if (uniqIds.has(item.id)) return false;
@@ -54,7 +64,7 @@ export const Filters: FC<FiltersPropsType> = ({
             setIsLoading(false);
         }
     };
-    const handleFilterChange = (event, key) => {
+    const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>, key: string) => {
         const newFilter = event.target.value;
         if (key === 'price') {
             setSelectedFilter({ [key]: Number(newFilter) });
@@ -76,7 +86,7 @@ export const Filters: FC<FiltersPropsType> = ({
                 Name:
                 <select
                     onChange={(event) => handleFilterChange(event, 'product')}
-                    value={selectedFilter}
+                    value={selectedFilter['product'] || ''}
                 >
                     <option value=''>-</option>
                     {names.map((name, index) => (
@@ -90,7 +100,7 @@ export const Filters: FC<FiltersPropsType> = ({
                 Price:
                 <select
                     onChange={(event) => handleFilterChange(event, 'price')}
-                    value={selectedFilter}
+                    value={selectedFilter['price'] || ''}
                 >
                     <option value=''>-</option>
                     {prices.map((price, index) => (
@@ -104,7 +114,7 @@ export const Filters: FC<FiltersPropsType> = ({
                 Brand:
                 <select
                     onChange={(event) => handleFilterChange(event, 'brand')}
-                    value={selectedFilter}
+                    value={selectedFilter['brand'] || ''}
                 >
                     <option value=''>-</option>
                     {brands.map((brand, index) => (

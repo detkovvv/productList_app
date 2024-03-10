@@ -14,7 +14,6 @@ export const MainComponent: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
     const [isLastPage, setIsLastPage] = useState<boolean>(false);
-    const [currentIds, setCurrentIds] = useState<string[]>([]);
     const [brands, setBrands] = useState<string[]>([]);
     const [prices, setPrices] = useState<number[]>([]);
     const [names, setNames] = useState<string[]>([]);
@@ -47,7 +46,6 @@ export const MainComponent: FC = () => {
                 }
             });
             setProducts(filteredResponse);
-            setCurrentIds(Array.from(uniqIds));
             setIsFirstPage(page === 1);
             setIsLastPage(filteredResponse.length < productsPerPage - 5);
         } catch (axiosError) {
@@ -82,9 +80,9 @@ export const MainComponent: FC = () => {
                 }),
             );
             const [brandsData, pricesData, namesData] = fieldsData;
-            setBrands(brandsData.filter((item) => item !== null));
-            setPrices(pricesData.filter((item) => item !== null));
-            setNames(namesData.filter((item) => item !== null));
+            setBrands(brandsData.filter((item: string | null) => item !== null));
+            setPrices(pricesData.filter((item: string | null) => item !== null));
+            setNames(namesData.filter((item: string | null) => item !== null));
         } catch (axiosError) {
             const error = axiosError as AxiosError;
             if (error.name === 'AbortError') {
@@ -113,10 +111,6 @@ export const MainComponent: FC = () => {
     };
     const handlePrevClick = () => {
         if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
-
-    const handleFilterChange = (event, setFilter) => {
-        setFilter(event.target.value);
     };
 
     return (
