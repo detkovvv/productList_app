@@ -1,6 +1,7 @@
 {
   "name": "productlist-app",
   "description": "list of product cards",
+  "homepage": "/productList_app/",
   "author": "Detkov Vasiliy",
   "private": true,
   "version": "0.1.0",
