@@ -14,6 +14,7 @@
     font-size: 2em;
     font-weight: bold;
     text-align: center;
+    color: var(--white);
 }
 
 .head {
@@ -27,6 +28,8 @@
     font-size: 1.5em;
     background-color: var(--white);
     text-align: center;
+    color: var(--darkpurple);
+    font-weight: 700;
 }
 
 .head_item:first-child {
@@ -43,10 +46,24 @@
     justify-content: flex-start;
     padding: 10px;
 }
+
 .navigation_items{
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.buttons{
+    display: flex;
+    gap: 5px;
+}
+@media screen and (max-width: 1024px){
+    .navigation_items{
+        flex-direction: column;
+    }
+    .buttons{
+        gap: 10px;
+    }
 }
 .btn{
     padding: 5px 10px;

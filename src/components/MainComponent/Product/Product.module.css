@@ -12,6 +12,8 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    color: var(--darkpurple);
+    font-weight: 700;
 }
 
 .field:first-child {

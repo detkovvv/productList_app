@@ -117,26 +117,12 @@ export const MainComponent: FC = () => {
             <h1 className={style.main_title}>Product List</h1>
             <ul className={style.head}>
                 <li className={style.head_item}>ID</li>
-                <li className={style.head_item}>Name</li>
+                <li className={style.head_item}>Product</li>
                 <li className={style.head_item}>Price</li>
                 <li className={style.head_item}>Brand</li>
             </ul>
             <nav className={style.navigation}>
                 <div className={style.navigation_items}>
-                    <button
-                        className={`${style.btn} ${style.btn_prev}`}
-                        disabled={isFirstPage}
-                        onClick={handlePrevClick}
-                    >
-                        prev
-                    </button>
-                    <button
-                        className={`${style.btn} ${style.btn_next}`}
-                        disabled={isLastPage}
-                        onClick={handleNextClick}
-                    >
-                        next
-                    </button>
                     <Filters
                         brands={brands}
                         names={names}
@@ -144,6 +130,22 @@ export const MainComponent: FC = () => {
                         setIsLoading={setIsLoading}
                         setProducts={setProducts}
                     />
+                    <div className={style.buttons}>
+                        <button
+                            className={`${style.btn} ${style.btn_prev}`}
+                            disabled={isFirstPage}
+                            onClick={handlePrevClick}
+                        >
+                            {'prev'}
+                        </button>
+                        <button
+                            className={`${style.btn} ${style.btn_next}`}
+                            disabled={isLastPage}
+                            onClick={handleNextClick}
+                        >
+                            {'next'}
+                        </button>
+                    </div>
                 </div>
             </nav>
             <ul className={style.list}>

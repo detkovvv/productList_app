@@ -69,8 +69,8 @@ export const Filters: FC<FiltersPropsType> = ({
 
     return (
         <div className={style.filter_container}>
-            <label>
-                Name:
+            <label className={style.filter_label}>
+                product:
                 <select
                     onChange={(event) => handleFilterChange(event, 'product')}
                     value={selectedFilter['product'] || ''}
@@ -83,8 +83,8 @@ export const Filters: FC<FiltersPropsType> = ({
                     ))}
                 </select>
             </label>
-            <label>
-                Price:
+            <label className={style.filter_label}>
+                price:
                 <select
                     onChange={(event) => handleFilterChange(event, 'price')}
                     value={selectedFilter['price'] || ''}
@@ -97,8 +97,8 @@ export const Filters: FC<FiltersPropsType> = ({
                     ))}
                 </select>
             </label>
-            <label>
-                Brand:
+            <label className={style.filter_label}>
+                brand:
                 <select
                     onChange={(event) => handleFilterChange(event, 'brand')}
                     value={selectedFilter['brand'] || ''}
