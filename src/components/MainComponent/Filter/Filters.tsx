@@ -19,7 +19,7 @@ export const Filters: FC<FiltersPropsType> = ({
     setIsLoading,
     setProducts,
 }) => {
-    const [selectedFilter, setSelectedFilter] = useState<object | ''>('');
+    const [selectedFilter, setSelectedFilter] = useState<object | string>();
 
     const getFilteredProducts = async (signal: AbortSignal, params: object) => {
         setIsLoading(true);
@@ -56,7 +56,11 @@ export const Filters: FC<FiltersPropsType> = ({
     };
     const handleFilterChange = (event, key) => {
         const newFilter = event.target.value;
-        setSelectedFilter({ [key]: newFilter });
+        if (key === 'price') {
+            setSelectedFilter({ [key]: Number(newFilter) });
+        } else {
+            setSelectedFilter({ [key]: newFilter });
+        }
     };
     useEffect(() => {
         const abortController = new AbortController();
