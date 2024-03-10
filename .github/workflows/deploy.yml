@@ -4,7 +4,7 @@ name: Deploy static content to Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['master']
+    branches: [ 'master' ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -37,6 +37,10 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
+      - name: Set up environment variables
+        run: |
+            echo "VITE_PASSWORD=${{ secrets.VITE_PASSWORD }}" >> $GITHUB_ENV
+            echo "VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}" >> $GITHUB_ENV
       - name: Build
         run: npm run build
       - name: Setup Pages
