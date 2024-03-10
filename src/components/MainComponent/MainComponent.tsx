@@ -36,7 +36,6 @@ export const MainComponent: FC = () => {
                 },
                 signal,
             );
-            // отбор уникальных продуктов
             const uniqIds = new Set();
             const filteredResponse = itemsResponse.data.result.filter((item: ProductType) => {
                 if (uniqIds.has(item.id)) return false;

@@ -1,27 +1,14 @@
 import { type AxiosError } from 'axios';
-import {
-    type ChangeEvent,
-    type Dispatch,
-    type FC,
-    type SetStateAction,
-    useEffect,
-    useState,
-} from 'react';
+import { type ChangeEvent, type FC, useEffect, useState } from 'react';
 
 import style from './Filter.module.css';
 import { fetching } from '../../../services/requests';
-import { type ProductType } from '../../../services/types';
+import {
+    type FiltersPropsType,
+    type ProductType,
+    type SelectedFilterType,
+} from '../../../services/types';
 
-type FiltersPropsType = {
-    brands: string[];
-    prices: number[];
-    names: string[];
-    setIsLoading: Dispatch<SetStateAction<boolean>>;
-    setProducts: Dispatch<SetStateAction<ProductType[]>>;
-};
-type SelectedFilterType = {
-    [key: string]: string | number | undefined;
-};
 export const Filters: FC<FiltersPropsType> = ({
     brands,
     prices,
