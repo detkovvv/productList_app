@@ -2,6 +2,7 @@ import { useState, useEffect, type FC } from 'react';
 
 import { Filters } from './Filter/Filters';
 import style from './MainComponent.module.css';
+import { Pagination } from './Pagination/Pagination';
 import { Product } from './Product/Product';
 import { getFields } from '../../services/getFields';
 import { getProducts } from '../../services/getProducts';
@@ -10,10 +11,8 @@ import { type ProductType } from '../../services/types';
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
-    const productsPerPage: number = 50;
+    const productsPerPage = 50;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isFirstPage, setIsFirstPage] = useState<boolean>(true);
-    const [isLastPage, setIsLastPage] = useState<boolean>(false);
     const [brands, setBrands] = useState<string[]>([]);
     const [prices, setPrices] = useState<number[]>([]);
     const [names, setNames] = useState<string[]>([]);
@@ -27,8 +26,6 @@ export const MainComponent: FC = () => {
             setIsLoading,
             productsPerPage,
             setProducts,
-            setIsFirstPage,
-            setIsLastPage,
         );
         getFields(
             abortController.signal,
@@ -44,13 +41,6 @@ export const MainComponent: FC = () => {
             abortController.abort();
         };
     }, [currentPage]);
-
-    const handleNextClick = () => {
-        if (!isLastPage) setCurrentPage(currentPage + 1);
-    };
-    const handlePrevClick = () => {
-        if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
 
     return (
         <div className={style.main_container}>
@@ -70,22 +60,12 @@ export const MainComponent: FC = () => {
                         setIsLoading={setIsLoading}
                         setProducts={setProducts}
                     />
-                    <div className={style.buttons}>
-                        <button
-                            className={`${style.btn} ${style.btn_prev}`}
-                            disabled={isFirstPage}
-                            onClick={handlePrevClick}
-                        >
-                            {'prev'}
-                        </button>
-                        <button
-                            className={`${style.btn} ${style.btn_next}`}
-                            disabled={isLastPage}
-                            onClick={handleNextClick}
-                        >
-                            {'next'}
-                        </button>
-                    </div>
+                    <Pagination
+                        currentPage={currentPage}
+                        listLength={products.length}
+                        productsPerPage={productsPerPage}
+                        setCurrentPage={setCurrentPage}
+                    />
                 </div>
             </nav>
             <ul className={style.list}>
