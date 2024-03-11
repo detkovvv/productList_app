@@ -27,7 +27,7 @@ export const MainComponent: FC = () => {
         );
         getFields(abortController.signal, currentPage, productsPerPage)
             .then((result) => {
-                setBrands(result.brands);
+                setBrands(result.brands.filter((item) => item != null));
                 setPrices(result.prices);
                 setProductNames(result.products);
             })
