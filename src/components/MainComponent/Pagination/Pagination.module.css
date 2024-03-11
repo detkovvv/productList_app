@@ -1,0 +1,29 @@
+
+.buttons{
+    display: flex;
+    gap: 5px;
+}
+@media screen and (max-width: 1024px){
+    .buttons{
+        gap: 10px;
+    }
+}
+.btn{
+    padding: 5px 20px;
+    background-color: var(--purple);
+    color: var(--white);
+    border-radius: 5px;
+    border: 1px solid var(--white);
+    text-align: center;
+    font-weight: 700;
+}
+.btn:hover{
+    background-color: var(--darkpurple);
+}
+.btn_prev:disabled,
+.btn_next:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.btn_prev{}
+.btn_next{}

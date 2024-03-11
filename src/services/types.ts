@@ -17,3 +17,9 @@ export type FiltersPropsType = {
 export type SelectedFilterType = {
     [key: string]: string | number | undefined;
 };
+
+export type FieldsData = {
+    brands: string[];
+    prices: number[];
+    products: string[];
+};

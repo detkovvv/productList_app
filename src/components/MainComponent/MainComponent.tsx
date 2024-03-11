@@ -1,6 +1,7 @@
 import { useState, useEffect, type FC } from 'react';
 
 import { Filters } from './Filter/Filters';
+import { Loader } from './Loader/Loader';
 import style from './MainComponent.module.css';
 import { Pagination } from './Pagination/Pagination';
 import { Product } from './Product/Product';
@@ -15,27 +16,20 @@ export const MainComponent: FC = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [brands, setBrands] = useState<string[]>([]);
     const [prices, setPrices] = useState<number[]>([]);
-    const [names, setNames] = useState<string[]>([]);
+    const [productNames, setProductNames] = useState<string[]>([]);
 
     useEffect(() => {
         const abortController = new AbortController();
-
-        getProducts(
-            abortController.signal,
-            currentPage,
-            setIsLoading,
-            productsPerPage,
-            setProducts,
+        setIsLoading(true);
+        getProducts(abortController.signal, currentPage, productsPerPage).then((result) =>
+            setProducts(result),
         );
-        getFields(
-            abortController.signal,
-            currentPage,
-            setIsLoading,
-            productsPerPage,
-            setBrands,
-            setPrices,
-            setNames,
-        );
+        getFields(abortController.signal, currentPage, productsPerPage).then((result) => {
+            setBrands(result.brands);
+            setPrices(result.prices);
+            setProductNames(result.products);
+        });
+        setIsLoading(false);
 
         return () => {
             abortController.abort();
@@ -43,7 +37,7 @@ export const MainComponent: FC = () => {
     }, [currentPage]);
 
     return (
-        <div className={style.main_container}>
+        <div>
             <h1 className={style.main_title}>Product List</h1>
             <ul className={style.head}>
                 <li className={style.head_item}>ID</li>
@@ -55,7 +49,7 @@ export const MainComponent: FC = () => {
                 <div className={style.navigation_items}>
                     <Filters
                         brands={brands}
-                        names={names}
+                        names={productNames}
                         prices={prices}
                         setIsLoading={setIsLoading}
                         setProducts={setProducts}
@@ -73,7 +67,7 @@ export const MainComponent: FC = () => {
                     <Product key={product.id} product={product} />
                 ))}
             </ul>
-            {isLoading && <div className={style.loading} />}
+            <Loader isLoading={isLoading} />
         </div>
     );
 };

@@ -22,8 +22,11 @@ export const Filters: FC<FiltersPropsType> = ({
         }
     };
     useEffect(() => {
+        setIsLoading(true);
         const abortController = new AbortController();
-        getFilteredProducts(abortController.signal, selectedFilter, setIsLoading, setProducts);
+        getFilteredProducts(abortController.signal, selectedFilter)
+            .then((result) => setProducts(result))
+            .finally(() => setIsLoading(false));
         return () => {
             abortController.abort();
         };

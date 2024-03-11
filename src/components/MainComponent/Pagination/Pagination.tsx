@@ -1,6 +1,6 @@
 import React, { type Dispatch, type FC } from 'react';
 
-import style from '../MainComponent.module.css';
+import style from './Pagination.module.css';
 
 type PaginationProps = {
     setCurrentPage: Dispatch<number>;
@@ -24,13 +24,15 @@ export const Pagination: FC<PaginationProps> = ({
                 className={`${style.btn} ${style.btn_prev}`}
                 disabled={currentPage <= 1}
                 onClick={handleClick(currentPage - 1)}
+                type='button'
             >
                 {'prev'}
             </button>
             <button
                 className={`${style.btn} ${style.btn_next}`}
-                disabled={listLength < productsPerPage}
+                disabled={listLength < productsPerPage - 1}
                 onClick={handleClick(currentPage + 1)}
+                type='button'
             >
                 {'next'}
             </button>
