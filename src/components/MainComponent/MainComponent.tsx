@@ -13,7 +13,7 @@ export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const productsPerPage = 50;
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [brands, setBrands] = useState<string[]>([]);
     const [prices, setPrices] = useState<number[]>([]);
     const [productNames, setProductNames] = useState<string[]>([]);
@@ -31,21 +31,14 @@ export const MainComponent: FC = () => {
                 setPrices(result.prices);
                 setProductNames(result.products);
             })
-            .finally(() => setIsLoading(false));
+            .finally(() => setIsLoading(true));
         return () => {
             abortController.abort();
         };
     }, [currentPage]);
 
     return (
-        <div>
-            <h1 className={style.main_title}>Product List</h1>
-            <ul className={style.head}>
-                <li className={style.head_item}>ID</li>
-                <li className={style.head_item}>Product</li>
-                <li className={style.head_item}>Price</li>
-                <li className={style.head_item}>Brand</li>
-            </ul>
+        <main className={style.container}>
             <nav className={style.navigation}>
                 <div className={style.navigation_items}>
                     <Filters
@@ -69,6 +62,6 @@ export const MainComponent: FC = () => {
                 ))}
             </ul>
             <Loader isLoading={isLoading} />
-        </div>
+        </main>
     );
 };

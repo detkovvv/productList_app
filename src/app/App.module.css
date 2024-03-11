@@ -1,5 +1,4 @@
-.container{
-    position: relative;
+.wrapper{
     padding: 0 50px;
     display: flex;
     flex-direction: column;

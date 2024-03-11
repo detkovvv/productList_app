@@ -12,3 +12,11 @@
     animation-direction: alternate;
     animation-timing-function: linear;
 }
+@keyframes loading {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) scale(1.3);
+    }
+}
