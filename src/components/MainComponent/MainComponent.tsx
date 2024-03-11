@@ -13,7 +13,7 @@ export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const productsPerPage = 50;
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [brands, setBrands] = useState<string[]>([]);
     const [prices, setPrices] = useState<number[]>([]);
     const [productNames, setProductNames] = useState<string[]>([]);
@@ -31,7 +31,7 @@ export const MainComponent: FC = () => {
                 setPrices(result.prices);
                 setProductNames(result.products);
             })
-            .finally(() => setIsLoading(true));
+            .finally(() => setIsLoading(false));
         return () => {
             abortController.abort();
         };

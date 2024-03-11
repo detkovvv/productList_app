@@ -26,7 +26,7 @@ export const Filters: FC<FiltersPropsType> = ({
         const abortController = new AbortController();
         getFilteredProducts(abortController.signal, selectedFilter)
             .then((result) => setProducts(result))
-            .finally(() => setIsLoading(true));
+            .finally(() => setIsLoading(false));
         return () => {
             abortController.abort();
         };
