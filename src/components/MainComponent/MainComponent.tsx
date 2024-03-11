@@ -21,16 +21,17 @@ export const MainComponent: FC = () => {
     useEffect(() => {
         const abortController = new AbortController();
         setIsLoading(true);
+
         getProducts(abortController.signal, currentPage, productsPerPage).then((result) =>
             setProducts(result),
         );
-        getFields(abortController.signal, currentPage, productsPerPage).then((result) => {
-            setBrands(result.brands);
-            setPrices(result.prices);
-            setProductNames(result.products);
-        });
-        setIsLoading(false);
-
+        getFields(abortController.signal, currentPage, productsPerPage)
+            .then((result) => {
+                setBrands(result.brands);
+                setPrices(result.prices);
+                setProductNames(result.products);
+            })
+            .finally(() => setIsLoading(false));
         return () => {
             abortController.abort();
         };
