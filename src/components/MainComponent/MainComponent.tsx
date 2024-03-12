@@ -52,7 +52,14 @@ export const MainComponent: FC = () => {
         setIsLoading(true);
         const abortController = new AbortController();
         getFilteredProducts(abortController.signal, selectedFilter)
-            .then((result) => setProducts(result))
+            .then((result) => {
+                if (result.length < 50) {
+                    setProducts(result);
+                } else {
+                    result.length = 50;
+                    setProducts(result);
+                }
+            })
             .finally(() => setIsLoading(false));
         return () => {
             abortController.abort();
