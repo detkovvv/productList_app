@@ -1,13 +1,14 @@
 import { useState, useEffect, type FC } from 'react';
 
-import { Filters } from './Filter/Filters';
+import { Filters } from './Filters/Filters';
 import { Loader } from './Loader/Loader';
 import style from './MainComponent.module.css';
 import { Pagination } from './Pagination/Pagination';
 import { Product } from './Product/Product';
 import { getFields } from '../../services/getFields';
+import { getFilteredProducts } from '../../services/getFilteredProducts';
 import { getProducts } from '../../services/getProducts';
-import { type ProductType } from '../../services/types';
+import { type ProductType, type SelectedFilterType } from '../../services/types';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -17,6 +18,9 @@ export const MainComponent: FC = () => {
     const [brands, setBrands] = useState<string[]>([]);
     const [prices, setPrices] = useState<number[]>([]);
     const [productNames, setProductNames] = useState<string[]>([]);
+    const [selectedFilter, setSelectedFilter] = useState<SelectedFilterType>({});
+
+    const onChange = (value: SelectedFilterType) => setSelectedFilter(value);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -37,6 +41,17 @@ export const MainComponent: FC = () => {
         };
     }, [currentPage]);
 
+    useEffect(() => {
+        setIsLoading(true);
+        const abortController = new AbortController();
+        getFilteredProducts(abortController.signal, selectedFilter)
+            .then((result) => setProducts(result))
+            .finally(() => setIsLoading(false));
+        return () => {
+            abortController.abort();
+        };
+    }, [selectedFilter]);
+
     return (
         <main className={style.container}>
             <nav className={style.navigation}>
@@ -44,9 +59,9 @@ export const MainComponent: FC = () => {
                     <Filters
                         brands={brands}
                         names={productNames}
+                        onChange={onChange}
                         prices={prices}
-                        setIsLoading={setIsLoading}
-                        setProducts={setProducts}
+                        selectedFilter={selectedFilter}
                     />
                     <Pagination
                         currentPage={currentPage}

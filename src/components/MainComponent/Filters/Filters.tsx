@@ -1,36 +1,23 @@
-import { type ChangeEvent, type FC, useEffect, useState } from 'react';
+import { type ChangeEvent, type FC } from 'react';
 
 import style from './Filter.module.css';
-import { getFilteredProducts } from '../../../services/getFilteredProducts';
-import { type FiltersPropsType, type SelectedFilterType } from '../../../services/types';
+import { type FiltersPropsType } from '../../../services/types';
 
 export const Filters: FC<FiltersPropsType> = ({
     brands,
     prices,
     names,
-    setIsLoading,
-    setProducts,
+    selectedFilter,
+    onChange,
 }) => {
-    const [selectedFilter, setSelectedFilter] = useState<SelectedFilterType>({});
-
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>, key: string) => {
         const newFilter = event.target.value;
         if (key === 'price') {
-            setSelectedFilter({ [key]: Number(newFilter) });
+            onChange({ [key]: Number(newFilter) });
         } else {
-            setSelectedFilter({ [key]: newFilter });
+            onChange({ [key]: newFilter });
         }
     };
-    useEffect(() => {
-        setIsLoading(true);
-        const abortController = new AbortController();
-        getFilteredProducts(abortController.signal, selectedFilter)
-            .then((result) => setProducts(result))
-            .finally(() => setIsLoading(false));
-        return () => {
-            abortController.abort();
-        };
-    }, [selectedFilter]);
 
     return (
         <div className={style.filter_container}>
