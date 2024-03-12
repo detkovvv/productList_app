@@ -8,7 +8,7 @@ import { Product } from './Product/Product';
 import { getFields } from '../../services/getFields';
 import { getFilteredProducts } from '../../services/getFilteredProducts';
 import { getProducts } from '../../services/getProducts';
-import { type ProductType, type SelectedFilterType } from '../../services/types';
+import { type FieldsData, type ProductType, type SelectedFilterType } from '../../services/types';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -26,16 +26,23 @@ export const MainComponent: FC = () => {
         const abortController = new AbortController();
         setIsLoading(true);
 
-        getProducts(abortController.signal, currentPage, productsPerPage).then((result) =>
-            setProducts(result),
-        );
-        getFields(abortController.signal, currentPage, productsPerPage)
-            .then((result) => {
-                setBrands(result.brands.filter((item) => item != null));
-                setPrices(result.prices);
-                setProductNames(result.products);
+        Promise.allSettled([
+            getProducts(abortController.signal, currentPage, productsPerPage),
+            getFields(abortController.signal, currentPage, productsPerPage),
+        ])
+            .then(([productsResult, fieldsResult]) => {
+                if (productsResult.status === 'fulfilled') {
+                    setProducts(productsResult.value);
+                }
+                if (fieldsResult.status === 'fulfilled') {
+                    const result = fieldsResult.value as FieldsData;
+                    setBrands(result.brands.filter((item) => item != null));
+                    setPrices(result.prices);
+                    setProductNames(result.products);
+                }
             })
             .finally(() => setIsLoading(false));
+
         return () => {
             abortController.abort();
         };
