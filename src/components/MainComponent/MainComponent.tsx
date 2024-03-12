@@ -9,7 +9,7 @@ import { getFields } from '../../services/getFields';
 import { getFilteredProducts } from '../../services/getFilteredProducts';
 import { getProducts } from '../../services/getProducts';
 import { type FieldsData, type ProductType, type SelectedFilterType } from '../../services/types';
-import { updateURL } from '../../services/updateURL';
+import { addUrlParams, clearUrlParams } from '../../services/updateURL';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -25,7 +25,7 @@ export const MainComponent: FC = () => {
         setSelectedFilter(newFilter);
         const keys = Object.keys(newFilter);
         const value = newFilter[keys[0]];
-        updateURL('filter', String(value));
+        addUrlParams('filter', String(value));
     };
 
     useEffect(() => {
@@ -48,7 +48,7 @@ export const MainComponent: FC = () => {
                 }
             })
             .finally(() => setIsLoading(false));
-        updateURL('page', String(currentPage));
+        currentPage > 1 ? addUrlParams('page', String(currentPage)) : clearUrlParams(currentPage);
 
         return () => {
             abortController.abort();
@@ -65,7 +65,7 @@ export const MainComponent: FC = () => {
             abortController.abort();
         };
     }, [selectedFilter]);
-    console.log(selectedFilter);
+
     return (
         <main className={style.container}>
             <nav className={style.navigation}>
