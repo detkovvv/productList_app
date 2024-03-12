@@ -9,6 +9,7 @@ import { getFields } from '../../services/getFields';
 import { getFilteredProducts } from '../../services/getFilteredProducts';
 import { getProducts } from '../../services/getProducts';
 import { type FieldsData, type ProductType, type SelectedFilterType } from '../../services/types';
+import { updateURL } from '../../services/updateURL';
 
 export const MainComponent: FC = () => {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -20,7 +21,12 @@ export const MainComponent: FC = () => {
     const [productNames, setProductNames] = useState<string[]>([]);
     const [selectedFilter, setSelectedFilter] = useState<SelectedFilterType>({});
 
-    const onChange = (value: SelectedFilterType) => setSelectedFilter(value);
+    const onChange = (newFilter: SelectedFilterType) => {
+        setSelectedFilter(newFilter);
+        const keys = Object.keys(newFilter);
+        const value = newFilter[keys[0]];
+        updateURL('filter', String(value));
+    };
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -42,6 +48,7 @@ export const MainComponent: FC = () => {
                 }
             })
             .finally(() => setIsLoading(false));
+        updateURL('page', String(currentPage));
 
         return () => {
             abortController.abort();
@@ -52,20 +59,13 @@ export const MainComponent: FC = () => {
         setIsLoading(true);
         const abortController = new AbortController();
         getFilteredProducts(abortController.signal, selectedFilter)
-            .then((result) => {
-                if (result.length < 50) {
-                    setProducts(result);
-                } else {
-                    result.length = 50;
-                    setProducts(result);
-                }
-            })
+            .then((result) => setProducts(result))
             .finally(() => setIsLoading(false));
         return () => {
             abortController.abort();
         };
     }, [selectedFilter]);
-
+    console.log(selectedFilter);
     return (
         <main className={style.container}>
             <nav className={style.navigation}>
