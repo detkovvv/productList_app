@@ -15,37 +15,13 @@ export const getFields: GetFieldsProps = async (signal, page, productsPerPage) =
         const fieldNames = ['brand', 'price', 'product'];
 
         const fieldsData = await Promise.allSettled(
-            fieldNames.map(async (field) => {
-                const fieldResponse = await fetching(
-                    'get_fields',
-                    {
-                        field: field,
-                        offset: offset,
-                        limit: productsPerPage,
-                    },
-                    signal,
-                );
-                return fieldResponse.data.result;
-            }),
+            fieldNames.map((field) =>
+                fetching('get_fields', { field, offset, limit: productsPerPage }, signal),
+            ),
         );
-        const brands: FieldsData['brands'] = [];
-        const prices: FieldsData['prices'] = [];
-        const products: FieldsData['products'] = [];
-        fieldsData.forEach((fieldData, index) => {
-            if (fieldData.status === 'fulfilled') {
-                const data = fieldData.value;
-                switch (index) {
-                    case 0:
-                        brands.push(...data);
-                        break;
-                    case 1:
-                        prices.push(...data);
-                        break;
-                    case 2:
-                        products.push(...data);
-                        break;
-                }
-            }
+
+        const [brands, prices, products] = fieldsData.map((item) => {
+            return item.status === 'fulfilled' ? item.value.data.result : [];
         });
 
         return { brands, prices, products };
