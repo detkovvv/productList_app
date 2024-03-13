@@ -1,20 +1,18 @@
-import axios from 'axios';
+import axiosLib from 'axios';
 import md5 from 'md5';
 
-const password: string = import.meta.env.VITE_PASSWORD;
-const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
+const PASSWORD = import.meta.env.VITE_PASSWORD;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const generateAuthString = (): string => {
     const timestamp: string = new Date().toISOString().split('T')[0].replace(/-/g, '');
-    return <string>md5(`${password}_${timestamp}`);
+    return <string>md5(`${PASSWORD}_${timestamp}`);
 };
 
-const authString = generateAuthString();
-
-export const axiosInstance = axios.create({
+export const axiosInstance = axiosLib.create({
     baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
-        'X-Auth': `${authString}`,
+        'X-Auth': generateAuthString(),
     },
 });

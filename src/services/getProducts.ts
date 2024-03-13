@@ -2,6 +2,7 @@ import { type AxiosError } from 'axios';
 
 import { fetching } from './requests';
 import { type ProductType } from './types';
+import { filterById } from './utils';
 
 type GetProductsProps = (
     signal: AbortSignal,
@@ -29,15 +30,7 @@ export const getProducts: GetProductsProps = async (
             },
             signal,
         );
-        const uniqIds = new Set();
-
-        return itemsResponse.data.result.filter((item: ProductType) => {
-            if (uniqIds.has(item.id)) return false;
-            else {
-                uniqIds.add(item.id);
-                return true;
-            }
-        });
+        return filterById(itemsResponse.data.result);
     } catch (axiosError) {
         const error = axiosError as AxiosError;
         if (error.name === 'AbortError') {
