@@ -23,9 +23,6 @@ export const MainComponent: FC = () => {
 
     const onChange = (newFilter: SelectedFilterType) => {
         setSelectedFilter(newFilter);
-        const keys = Object.keys(newFilter);
-        const value = newFilter[keys[0]];
-        setUrlParams('filter', String(value));
     };
 
     useEffect(() => {
@@ -48,7 +45,6 @@ export const MainComponent: FC = () => {
                 }
             })
             .finally(() => setIsLoading(false));
-        setUrlParams('page', String(currentPage));
 
         return () => {
             abortController.abort();
@@ -65,6 +61,17 @@ export const MainComponent: FC = () => {
             abortController.abort();
         };
     }, [selectedFilter]);
+
+    useEffect(() => {
+        const keys = Object.keys(selectedFilter);
+        const value = selectedFilter[keys[0]];
+        value !== undefined && setUrlParams('filter', String(value));
+    }, [selectedFilter]);
+
+    useEffect(() => {
+        console.log(currentPage);
+        setUrlParams('page', String(currentPage));
+    }, [currentPage]);
 
     return (
         <main className={style.container}>

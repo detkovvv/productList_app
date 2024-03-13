@@ -2,7 +2,7 @@ export const setUrlParams = (key: string, value: string) => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     if (urlSearchParams.has(key)) {
         key === 'page' && value === '1'
-            ? urlSearchParams.delete(key, value)
+            ? urlSearchParams.delete(key)
             : urlSearchParams.set(key, value);
     } else {
         urlSearchParams.append(key, value);
