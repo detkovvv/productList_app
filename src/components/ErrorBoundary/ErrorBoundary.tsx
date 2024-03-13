@@ -39,9 +39,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             return (
                 <div className={style.fallback} role='alert'>
                     <h2>Что-то пошло не так</h2>
-                    <p>{this.state.error && this.state.error.toString()}</p>
-                    <details>{this.state.errorInfo && this.state.errorInfo.componentStack}</details>
-                    <button onClick={this.handleReload}>Reload</button>
+                    {this.state.error && <p>{this.state.error.toString()}</p>}
+                    {this.state.errorInfo && (
+                        <details>{this.state.errorInfo.componentStack}</details>
+                    )}
+                    <button onClick={this.handleReload} type='button'>
+                        Reload
+                    </button>
                 </div>
             );
         }
