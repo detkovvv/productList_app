@@ -9,6 +9,12 @@ type GetFieldsProps = (
     productsPerPage: number,
 ) => Promise<FieldsData>;
 
+type FieldsResponse = {
+    brands: string[];
+    prices: number[];
+    products: string[];
+};
+
 export const getFields: GetFieldsProps = async (signal, page, productsPerPage) => {
     const offset = (page - 1) * productsPerPage;
     try {
@@ -21,10 +27,10 @@ export const getFields: GetFieldsProps = async (signal, page, productsPerPage) =
         );
 
         const [brands, prices, products] = fieldsData.map((item) => {
-            return item.status === 'fulfilled' ? item.value.data.result : [];
+            return item.status === 'fulfilled' ? [...new Set(item.value.data.result)] : [];
         });
 
-        return { brands, prices, products };
+        return <FieldsResponse>{ brands, prices, products };
     } catch (axiosError) {
         const error = axiosError as AxiosError;
         if (error.name === 'AbortError') {
