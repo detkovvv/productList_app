@@ -1,43 +1,32 @@
-import { type AxiosError } from 'axios';
-
 import { fetching } from './requests';
 import { type FieldsData } from './types';
+import { fetchData } from './utils';
 
-type GetFieldsProps = (
-    signal: AbortSignal,
-    page: number,
-    productsPerPage: number,
-) => Promise<FieldsData>;
+export type GetFieldsType = (...args: FieldsRequestArgs) => Promise<FieldsData>;
 
-type FieldsResponse = {
+export type FieldsResponse = {
     brands: string[];
     prices: number[];
     products: string[];
 };
 
-export const getFields: GetFieldsProps = async (signal, page, productsPerPage) => {
-    const offset = (page - 1) * productsPerPage;
-    try {
-        const fieldNames = ['brand', 'price', 'product'];
+export type FieldsRequestArgs = [signal: AbortSignal, page: number, productsPerPage: number];
 
-        const fieldsData = await Promise.allSettled(
+export const getFields: GetFieldsType = async (signal, page, productsPerPage) => {
+    const offset = (page - 1) * productsPerPage;
+    const fieldNames = ['brand', 'price', 'product'];
+
+    const fieldsData = await fetchData(async () => {
+        return Promise.allSettled(
             fieldNames.map((field) =>
                 fetching('get_fields', { field, offset, limit: productsPerPage }, signal),
             ),
         );
+    });
 
-        const [brands, prices, products] = fieldsData.map((item) => {
-            return item.status === 'fulfilled' ? [...new Set(item.value.data.result)] : [];
-        });
+    const [brands, prices, products] = fieldsData.map((item) => {
+        return item.status === 'fulfilled' ? [...new Set(item.value.data.result)] : [];
+    });
 
-        return <FieldsResponse>{ brands, prices, products };
-    } catch (axiosError) {
-        const error = axiosError as AxiosError;
-        if (error.name === 'AbortError') {
-            console.log('Request aborted', error.message);
-        } else {
-            console.error('Error fetching data:', error);
-        }
-        return { brands: [], prices: [], products: [] };
-    }
+    return <FieldsResponse>{ brands, prices, products };
 };

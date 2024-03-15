@@ -1,43 +1,20 @@
-import { type AxiosError } from 'axios';
-
 import { fetching } from './requests';
 import { type ProductType } from './types';
-import { filterById } from './utils';
+import { fetchData, filterById } from './utils';
 
-type GetProductsProps = (
-    signal: AbortSignal,
-    page: number,
-    productsPerPage: number,
-) => Promise<ProductType[]>;
+export type GetProductsType = (...args: ProductsRequestArgs) => Promise<ProductType[]>;
 
-export const getProducts: GetProductsProps = async (
-    signal: AbortSignal,
-    page: number,
-    productsPerPage,
-) => {
+export type ProductsRequestArgs = [signal: AbortSignal, page: number, productsPerPage: number];
+
+export const getProducts: GetProductsType = async (signal, page, productsPerPage) => {
     const offset = (page - 1) * productsPerPage;
-    try {
-        const { data } = await fetching(
-            'get_ids',
-            { offset: offset, limit: productsPerPage },
-            signal,
-        );
 
-        const itemsResponse = await fetching(
-            'get_items',
-            {
-                ids: data.result,
-            },
-            signal,
-        );
-        return filterById(itemsResponse.data.result);
-    } catch (axiosError) {
-        const error = axiosError as AxiosError;
-        if (error.name === 'AbortError') {
-            console.log('Request aborted', error.message);
-        } else {
-            console.error('Error fetching data:', error);
-        }
-        return [];
-    }
+    const { data } = await fetchData(async () => {
+        return fetching('get_ids', { offset, limit: productsPerPage }, signal);
+    });
+
+    const itemsResponse = await fetchData(async () => {
+        return fetching('get_items', { ids: data.result }, signal);
+    });
+    return filterById(itemsResponse.data.result);
 };
