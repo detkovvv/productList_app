@@ -5,7 +5,13 @@ export const setUrlParams = (key: string, value: string) => {
             ? urlSearchParams.delete(key)
             : urlSearchParams.set(key, value);
     } else {
-        urlSearchParams.append(key, value);
+        if (key === 'page') {
+            const newUrlSearchParams = new URLSearchParams();
+            newUrlSearchParams.append(key, value);
+            const newURL = `${window.location.pathname}?${newUrlSearchParams.toString()}&${urlSearchParams.toString()}`;
+            window.history.pushState({ path: newURL }, '', newURL);
+            return;
+        } else urlSearchParams.append(key, value);
     }
     const newURL = `${window.location.pathname}?${urlSearchParams.toString()}`;
     window.history.pushState({ path: newURL }, '', newURL);
