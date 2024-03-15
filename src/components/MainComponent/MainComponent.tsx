@@ -69,7 +69,6 @@ export const MainComponent: FC = () => {
     }, [selectedFilter]);
 
     useEffect(() => {
-        console.log(currentPage);
         setUrlParams('page', String(currentPage));
     }, [currentPage]);
 

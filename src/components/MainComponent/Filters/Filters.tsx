@@ -10,13 +10,10 @@ export const Filters: FC<FiltersPropsType> = ({
     selectedFilter,
     onChange,
 }) => {
-    const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>, key: string) => {
+    const handleFilterChange = (key: string) => (event: ChangeEvent<HTMLSelectElement>) => {
         const newFilter = event.target.value;
-        if (key === 'price') {
-            onChange({ [key]: Number(newFilter) });
-        } else {
-            onChange({ [key]: newFilter });
-        }
+
+        onChange({ [key]: key === 'price' ? Number(newFilter) : newFilter });
     };
 
     return (
@@ -24,12 +21,12 @@ export const Filters: FC<FiltersPropsType> = ({
             <label className={style.filter_label}>
                 product:
                 <select
-                    onChange={(event) => handleFilterChange(event, 'product')}
+                    onChange={handleFilterChange('product')}
                     value={selectedFilter['product'] || ''}
                 >
                     <option value=''>-</option>
-                    {names.map((name, index) => (
-                        <option key={index} value={name}>
+                    {names.map((name) => (
+                        <option key={name} value={name}>
                             {name}
                         </option>
                     ))}
@@ -38,12 +35,12 @@ export const Filters: FC<FiltersPropsType> = ({
             <label className={style.filter_label}>
                 price:
                 <select
-                    onChange={(event) => handleFilterChange(event, 'price')}
+                    onChange={handleFilterChange('price')}
                     value={selectedFilter['price'] || ''}
                 >
                     <option value=''>-</option>
-                    {prices.map((price, index) => (
-                        <option key={index} value={price}>
+                    {prices.map((price) => (
+                        <option key={price} value={price}>
                             {price}
                         </option>
                     ))}
@@ -52,12 +49,12 @@ export const Filters: FC<FiltersPropsType> = ({
             <label className={style.filter_label}>
                 brand:
                 <select
-                    onChange={(event) => handleFilterChange(event, 'brand')}
+                    onChange={handleFilterChange('brand')}
                     value={selectedFilter['brand'] || ''}
                 >
                     <option value=''>-</option>
-                    {brands.map((brand, index) => (
-                        <option key={index} value={brand}>
+                    {brands.map((brand) => (
+                        <option key={brand} value={brand}>
                             {brand}
                         </option>
                     ))}

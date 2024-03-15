@@ -4,8 +4,8 @@ import md5 from 'md5';
 const PASSWORD = import.meta.env.VITE_PASSWORD;
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-const generateAuthString = (): string => {
-    const timestamp: string = new Date().toISOString().split('T')[0].replace(/-/g, '');
+const generateAuthString = () => {
+    const timestamp = new Date().toISOString().split('T')[0].replace(/-/g, '');
     return <string>md5(`${PASSWORD}_${timestamp}`);
 };
 
