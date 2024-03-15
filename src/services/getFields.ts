@@ -1,6 +1,6 @@
+import { fetchData } from './fetchWrapper';
 import { fetching } from './requests';
 import { type FieldsData } from './types';
-import { fetchData } from './utils';
 
 export type GetFieldsType = (...args: FieldsRequestArgs) => Promise<FieldsData>;
 

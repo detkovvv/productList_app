@@ -1,6 +1,7 @@
+import { fetchData } from './fetchWrapper';
 import { fetching } from './requests';
 import { type ProductType } from './types';
-import { fetchData, filterById } from './utils';
+import { filterById } from './utils';
 
 export type GetFilteredProductsType = (
     ...args: FilteredProductsRequestArgs
