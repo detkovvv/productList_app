@@ -1,7 +1,6 @@
-import { type AxiosError } from 'axios';
-import { type FetchFunction } from 'vite';
+import { type AxiosError, type AxiosResponse } from 'axios';
 
-type FetchFunction<T> = () => Promise<T>;
+type FetchFunction<T> = () => Promise<AxiosResponse<T>>;
 
 type FetchFunctionArgs<T> = Parameters<FetchFunction<T>>;
 
