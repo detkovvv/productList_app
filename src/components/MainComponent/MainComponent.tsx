@@ -27,9 +27,9 @@ export const MainComponent: FC = () => {
     useLayoutEffect(() => {
         const params = checkingSearchParams();
         console.log(params);
-        console.log(params['filter']);
-        console.log(params['page']);
-        params['filter'] && setSelectedFilter(params['filter']);
+        params['product'] && setSelectedFilter({ product: params['product'] });
+        params['price'] && setSelectedFilter({ product: Number(params['price']) });
+        params['brand'] && setSelectedFilter({ product: params['brand'] });
         params['page'] && setCurrentPage(Number(params['page']));
     }, []);
     console.log(selectedFilter, currentPage);
@@ -73,8 +73,9 @@ export const MainComponent: FC = () => {
 
     useEffect(() => {
         const keys = Object.keys(selectedFilter);
+        const key = keys[0];
         const value = selectedFilter[keys[0]];
-        value !== undefined && setUrlParams('filter', String(value));
+        value !== undefined && setUrlParams(key, String(value));
     }, [selectedFilter]);
 
     useEffect(() => {
