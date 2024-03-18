@@ -1,4 +1,4 @@
-import { useState, useEffect, type FC } from 'react';
+import { useState, useEffect, type FC, useLayoutEffect } from 'react';
 
 import { Filters } from './Filters/Filters';
 import { Loader } from './Loader/Loader';
@@ -8,7 +8,7 @@ import { Product } from './Product/Product';
 import { getFields } from '../../services/getFields';
 import { getFilteredProducts } from '../../services/getFilteredProducts';
 import { getProducts } from '../../services/getProducts';
-import { setUrlParams } from '../../services/setUrlParams';
+import { checkingSearchParams, setUrlParams } from '../../services/setUrlParams';
 import { type FieldsData, type ProductType, type SelectedFilterType } from '../../services/types';
 
 export const MainComponent: FC = () => {
@@ -24,6 +24,15 @@ export const MainComponent: FC = () => {
     const onChange = (newFilter: SelectedFilterType) => {
         setSelectedFilter(newFilter);
     };
+    useLayoutEffect(() => {
+        const params = checkingSearchParams();
+        console.log(params);
+        console.log(params['filter']);
+        console.log(params['page']);
+        params['filter'] && setSelectedFilter(params['filter']);
+        params['page'] && setCurrentPage(Number(params['page']));
+    }, []);
+    console.log(selectedFilter, currentPage);
 
     useEffect(() => {
         const abortController = new AbortController();
